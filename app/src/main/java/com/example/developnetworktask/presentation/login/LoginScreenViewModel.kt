@@ -34,6 +34,7 @@ class LoginScreenViewModel @Inject constructor(private val dataStore: DataStoreM
             is LoginEvent.Submit -> {
                 submitData()
             }
+
         }
     }
 

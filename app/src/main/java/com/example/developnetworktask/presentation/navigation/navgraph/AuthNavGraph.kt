@@ -1,5 +1,6 @@
 package com.example.developnetworktask.presentation.navigation.navgraph
 
+import RegisterScreen
 import android.widget.Toast
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -22,31 +23,17 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController,viewModel: Log
            LaunchedEffect(key1 = context){
                if (viewModel.getPrefData(context) != "0")  navController.navigate(Graph.HOME)
            }
-        LoginScreen(onClick = {navController.navigate(Graph.HOME)})
-        //            LoginContent(
-//                onClick = {
-//                    navController.popBackStack()
-//                    navController.navigate(Graph.HOME)
-//                },
-//                onSignUpClick = {
-//                    navController.navigate(AuthScreen.SignUp.route)
-//                },
-//                onForgotClick = {
-//                    navController.navigate(AuthScreen.Forgot.route)
-//                }
-//            )
+        LoginScreen(onClick = {navController.navigate(Graph.HOME)}, navController = navController)
+
         }
-//        composable(route = AuthScreen.SignUp.route) {
-//            ScreenContent(name = AuthScreen.SignUp.route) {}
-//        }
-//        composable(route = AuthScreen.Forgot.route) {
-//            ScreenContent(name = AuthScreen.Forgot.route) {}
-//        }
+        composable(route = AuthScreen.SignUp.route) {
+            RegisterScreen(navController)
+        }
+
     }
 }
 
 sealed class AuthScreen(val route: String) {
     object Login : AuthScreen(route = "LOGIN")
     object SignUp : AuthScreen(route = "SIGN_UP")
-    object Forgot : AuthScreen(route = "FORGOT")
 }

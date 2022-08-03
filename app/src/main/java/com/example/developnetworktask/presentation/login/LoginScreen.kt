@@ -20,20 +20,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.developnetworktask.presentation.login.components.GradientButton
 import com.example.developnetworktask.presentation.login.components.PasswordInputField
 import com.example.developnetworktask.presentation.login.components.PhoneInputField
+import com.example.developnetworktask.presentation.navigation.navgraph.AuthScreen
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun LoginScreen(onClick: () -> Unit,viewModel: LoginScreenViewModel = hiltViewModel()) {
+fun LoginScreen(
+    onClick: () -> Unit,
+    viewModel: LoginScreenViewModel = hiltViewModel(),
+    navController: NavController
+) {
     val context = LocalContext.current
     Surface(modifier = Modifier.fillMaxSize()) {
-        LaunchedEffect(key1 =context ){
-            viewModel.validationEvents.collect{event->
-                when(event){
+        LaunchedEffect(key1 = context) {
+            viewModel.validationEvents.collect { event ->
+                when (event) {
                     LoginScreenViewModel.ValidationEvent.Success -> {
                         onClick()
                         Toast.makeText(context, "login successfully", Toast.LENGTH_LONG).show()
@@ -112,9 +118,30 @@ fun LoginScreen(onClick: () -> Unit,viewModel: LoginScreenViewModel = hiltViewMo
                     )
                 )
             ) {
-        viewModel.onEvent(LoginEvent.Submit)
+                viewModel.onEvent(LoginEvent.Submit)
             }
 
+
         }
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(50.dp), verticalArrangement = Arrangement.Bottom) {
+            GradientButton(
+                modifier = Modifier,
+                text = "Register",
+                textColor = Color.White,
+                gradient = Brush.horizontalGradient(
+                    listOf(
+                        Color(0xFF00BCD4),
+                        Color(0xFF03A9F4),
+                        Color(0xFF2196F3)
+                    )
+                )
+            ) {
+                navController.navigate(AuthScreen.SignUp.route)
+            }
+        }
+
     }
 }

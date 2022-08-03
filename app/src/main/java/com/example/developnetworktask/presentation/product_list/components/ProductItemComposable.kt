@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -63,7 +64,7 @@ fun ProductItemComposable(productItem: ProductItem, modifier: Modifier = Modifie
                 )
                 Spacer(modifier = Modifier.height(2.dp))
 
-                Text(text = "Price : ${productItem.price}L.E")
+                Text(text = "Price : ${productItem.price}L.E" , fontStyle = FontStyle.Italic)
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
@@ -167,7 +168,7 @@ fun ProductItemComposableStockOver(productItem: ProductItem, modifier: Modifier 
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                Text(text = "Price : ${productItem.price}L.E")
+                Text(text = "Price : ${productItem.price}L.E" , fontStyle = FontStyle.Italic)
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
