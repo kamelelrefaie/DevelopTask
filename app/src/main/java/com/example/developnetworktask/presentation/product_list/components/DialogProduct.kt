@@ -2,6 +2,7 @@ package com.example.developnetworktask.presentation.product_list.components
 
 
 import CustomDialog
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -105,19 +106,7 @@ fun DialogProduct(productItem: ProductItem, modifier: Modifier = Modifier) {
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                OutlinedButton(
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        contentColor = Color.Black
-                    ),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(
-                        text = "Cancel",
 
-                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
-                    )
-                }
             }
 
 

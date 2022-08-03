@@ -49,7 +49,7 @@ class ProductListViewModel @Inject constructor(
             )
                 .collect { result ->
                     when (result) {
-                        is Resource.Error -> TODO()
+                        is Resource.Error -> state = state.copy(error = result.message)
                         is Resource.Loading -> state = state.copy(isLoading = result.isLoading)
                         is Resource.Success -> {
                             result.data?.let { productList ->

@@ -1,6 +1,8 @@
 package com.example.developnetworktask.presentation.product_list.components
 
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -89,18 +91,24 @@ fun ProductItemComposable(productItem: ProductItem, modifier: Modifier = Modifie
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
-
+                val context = LocalContext.current
                 OutlinedButton(
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(
                         contentColor = Color.Black
                     ),
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        Toast.makeText(context, productItem.description, Toast.LENGTH_LONG).show()
+                    }
                 ) {
                     Text(
                         text = "See Description",
 
-                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White
+                        )
                     )
                 }
             }
@@ -122,8 +130,12 @@ fun ProductItemComposable(productItem: ProductItem, modifier: Modifier = Modifie
             }
         }
     }
-}@Composable
+}
+
+@Composable
 fun ProductItemComposableStockOver(productItem: ProductItem, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = Color(0xFFE8EDFA),
@@ -195,12 +207,19 @@ fun ProductItemComposableStockOver(productItem: ProductItem, modifier: Modifier 
                     colors = ButtonDefaults.buttonColors(
                         contentColor = Color.Black
                     ),
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        Toast.makeText(context, productItem.description, Toast.LENGTH_LONG).show()
+
+                    }
                 ) {
                     Text(
                         text = "See Description",
 
-                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White
+                        )
                     )
                 }
             }

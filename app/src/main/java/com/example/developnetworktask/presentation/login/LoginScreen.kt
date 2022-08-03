@@ -71,7 +71,7 @@ fun LoginScreen(onClick: () -> Unit,viewModel: LoginScreenViewModel = hiltViewMo
                     modifier = Modifier
                         .size(150.dp)
                         .offset(y = ((-20).dp)),
-                    painter = painterResource(id = com.example.developnetworktask.R.drawable.bg_icon),
+                    painter = painterResource(id = com.example.developnetworktask.R.drawable.dv_icon),
                     contentDescription = "Background Image"
                 )
             }

@@ -53,6 +53,7 @@ fun ProductListScreen(viewModel: ProductListViewModel = hiltViewModel()) {
                 onRefresh = { viewModel.onEvent(ProductListEvent.Refresh) }) {
             }
         }
+
         var location = 0
         items(state.products.size) { i ->
             Box(modifier = Modifier.clickable {

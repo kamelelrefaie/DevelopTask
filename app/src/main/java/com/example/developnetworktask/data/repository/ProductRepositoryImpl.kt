@@ -35,39 +35,44 @@ class ProductRepositoryImpl @Inject constructor(
             it.toProductItem()
         }))
 
-        val shouldLoadFromCache = productList.isNotEmpty() && counter == 2
+        val shouldLoadFromCache = (productList.isNotEmpty() )
         if (shouldLoadFromCache) {
             emit(Resource.Loading(false))
             return@flow
         }
 
-        val remoteProductList = try {
-            var skipProduct = 0
-            if (counter ==0){
-                dao.clearProductList()
+        try {
+
+            val remoteProductList = try {
+                var skipProduct = 0
+                if (counter == 0) {
+                    dao.clearProductList()
+                }
+                if (counter == 1) {
+                    skipProduct = 50
+                }
+                val response = api.getProducts(token, skipProduct)
+
+                //caching into database
+                dao.insertProductList(response.products.map { it.toProductItemEntity() })
+
+                //emit new values
+                emit(Resource.Success(data = dao.getProductList().map { it.toProductItem() }))
+                emit(Resource.Loading(false))
+
+                //parsing is wrong
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emit(Resource.Error("Couldn't load data"))
+                //invalid response
+            } catch (e: HttpException) {
+                e.printStackTrace()
+                emit(Resource.Error("Couldn't load data"))
             }
-            if (counter == 1){
-                skipProduct = 50
-            }
-            val response = api.getProducts(token,skipProduct)
-
-            //caching into database
-            dao.insertProductList(response.products.map { it.toProductItemEntity() })
-
-            //emit new values
-            emit(Resource.Success(data = dao.getProductList().map { it.toProductItem() }))
-            emit(Resource.Loading(false))
-
-            //parsing is wrong
-        } catch (e: IOException) {
+        }catch (e :Exception){
             e.printStackTrace()
-            emit(Resource.Error("Couldn't load data"))
-            //invalid response
-        } catch (e: HttpException) {
-            e.printStackTrace()
-            emit(Resource.Error("Couldn't load data"))
+            emit(Resource.Error("NO Internet Connection"))
         }
-
     }
 
 

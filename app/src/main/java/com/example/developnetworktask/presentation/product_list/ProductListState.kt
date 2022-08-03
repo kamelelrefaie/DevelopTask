@@ -5,5 +5,6 @@ import com.example.developnetworktask.domain.model.ProductItem
 data class ProductListState(
     val products: List<ProductItem> = emptyList(),
     val isLoading: Boolean = false,
-    val isRefreshing: Boolean = false
+    val isRefreshing: Boolean = false,
+    val error: String? = null
 )
