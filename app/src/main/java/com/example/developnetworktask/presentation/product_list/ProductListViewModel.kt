@@ -5,14 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.developnetworktask.data.repository.DataStoreManager
 import com.example.developnetworktask.domain.repository.ProductRepository
 import com.example.developnetworktask.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductListViewModel @Inject constructor(private val repository: ProductRepository) :
+class ProductListViewModel @Inject constructor(private val repository: ProductRepository,private val dataStore: DataStoreManager) :
     ViewModel() {
     var state by mutableStateOf(ProductListState())
 
@@ -27,7 +29,7 @@ class ProductListViewModel @Inject constructor(private val repository: ProductRe
 
     fun getProductList(fetchFromRemote: Boolean = false) {
         viewModelScope.launch {
-            repository.getProducts(fetchFromRemote = fetchFromRemote, "kamle")
+            repository.getProducts(fetchFromRemote = fetchFromRemote, dataStore.getFromDataStore().first())
                 .collect { result ->
                     when (result) {
                         is Resource.Error -> TODO()
