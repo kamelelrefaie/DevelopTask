@@ -25,7 +25,8 @@ class ProductRepositoryImpl @Inject constructor(
     private val dao = db.productDao
     override suspend fun getProducts(
         fetchFromRemote: Boolean,
-        token: String
+        token: String,
+        counter:Int
     ): Flow<Resource<List<ProductItem>>> = flow {
         emit(Resource.Loading(true))
 
@@ -34,20 +35,29 @@ class ProductRepositoryImpl @Inject constructor(
             it.toProductItem()
         }))
 
-        val shouldLoadFromCache = productList.isNotEmpty() && !fetchFromRemote
+        val shouldLoadFromCache = productList.isNotEmpty() && counter == 2
         if (shouldLoadFromCache) {
             emit(Resource.Loading(false))
             return@flow
         }
 
         val remoteProductList = try {
-            val response = api.getProducts(token)
+            var skipProduct = 0
+            if (counter ==0){
+                dao.clearProductList()
+            }
+            if (counter == 1){
+                skipProduct = 50
+            }
+            val response = api.getProducts(token,skipProduct)
+
             //caching into database
-            dao.clearProductList()
             dao.insertProductList(response.products.map { it.toProductItemEntity() })
+
             //emit new values
             emit(Resource.Success(data = dao.getProductList().map { it.toProductItem() }))
             emit(Resource.Loading(false))
+
             //parsing is wrong
         } catch (e: IOException) {
             e.printStackTrace()
@@ -59,6 +69,7 @@ class ProductRepositoryImpl @Inject constructor(
         }
 
     }
+
 
 }
 

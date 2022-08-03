@@ -13,17 +13,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.developnetworktask.presentation.product_list.components.ProductItemComposable
-import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.material.ContentAlpha
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -33,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.developnetworktask.presentation.navigation.BottomBarScreen
 import com.example.developnetworktask.presentation.navigation.navgraph.HomeNavGraph
 import com.example.developnetworktask.presentation.product_list.components.ProductItemComposableStockOver
+import com.google.accompanist.swiperefresh.SwipeRefresh
 
 @Composable
 fun ProductListScreen(viewModel: ProductListViewModel = hiltViewModel()) {
@@ -57,25 +61,29 @@ fun ProductListScreen(viewModel: ProductListViewModel = hiltViewModel()) {
             }) {
                 val products = state.products
 
-                if (state.products[i].stock > 50){
-                  ProductItemComposableStockOver(productItem = products[i])  
-                }else{
-                ProductItemComposable(
-                    productItem = products[i]
-                )}
+                if (state.products[i].stock > 50) {
+                    ProductItemComposableStockOver(productItem = products[i])
+                } else {
+                    ProductItemComposable(
+                        productItem = products[i]
+                    )
+                }
 
                 if (showDialog.value) CustomDialog(
                     productItem = products[location],
                     setShowDialog = { showDialog.value = it })
 
-                if (i < state.products.size  ) {
+                if (i < state.products.size) {
                     Divider(modifier = Modifier.padding(horizontal = 20.dp))
-                }
+
+                } 
             }
 
+
         }
-        item() {
-            if (true) {
+        item {
+            // viewModel.onEvent(ProductListEvent.Refresh)
+            if (viewModel.counter < 2) {
                 Row(
                     modifier = Modifier
                         .padding(15.dp)
@@ -85,6 +93,40 @@ fun ProductListScreen(viewModel: ProductListViewModel = hiltViewModel()) {
                 ) {
                     CircularProgressIndicator()
                 }
+
+                viewModel.counter = viewModel.counter +1
+                viewModel.onEvent(ProductListEvent.Refresh)
+            }else {
+
+                Column(
+                    Modifier.padding(bottom = 20.dp)
+                        .fillMaxWidth()
+                        .height(150.dp), verticalArrangement = Arrangement.Center , horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = "End of The List", fontWeight = FontWeight.Bold, fontSize = 20.sp, textAlign = TextAlign.Center)
+
+                    androidx.compose.material3.Button(onClick = { viewModel.onEvent(ProductListEvent.RefreshList)  },  colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent )) {
+                         Box(
+                             modifier = Modifier
+
+                                 .background(brush = Brush.linearGradient(listOf(
+                                     Color(0xFF2196F3),
+                                     Color(0xFF03A9F4),
+                                     Color(0xFF2196F3)
+                                 )))
+                                 .padding(horizontal = 32.dp, vertical = 8.dp)
+                               ,
+
+                             contentAlignment = Alignment.Center
+                         ) {
+                             androidx.compose.material3.Text(
+                                 text = "Click to Refresh",
+                                 color = Color.White
+                             )
+                         }
+
+                     }
+                }
+                
             }
         }
     }
@@ -92,17 +134,18 @@ fun ProductListScreen(viewModel: ProductListViewModel = hiltViewModel()) {
 }
 
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController = rememberNavController(),navRoot:NavHostController) {
+fun HomeScreen(
+    navController: NavHostController = rememberNavController(),
+    navRoot: NavHostController
+) {
 
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
-    ){ values ->
+    ) { values ->
         Column(Modifier.padding(values)) {
-            HomeNavGraph(navController = navController,navRoot)
+            HomeNavGraph(navController = navController, navRoot)
         }
     }
 }
@@ -119,7 +162,7 @@ fun BottomBar(navController: NavHostController) {
 
     val bottomBarDestination = screens.any { it.route == currentDestination?.route }
     if (bottomBarDestination) {
-        BottomNavigation(backgroundColor = Color(0xFF2196F3) , contentColor = Color.White) {
+        BottomNavigation(backgroundColor = Color(0xFF2196F3), contentColor = Color.White) {
             screens.forEach { screen ->
                 AddItem(
                     screen = screen,

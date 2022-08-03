@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface ProductRepository {
-    suspend fun getProducts(fetchFromRemote:Boolean,token: String): Flow<Resource<List<ProductItem>>>
+    suspend fun getProducts(fetchFromRemote:Boolean,token: String,counter:Int): Flow<Resource<List<ProductItem>>>
 }
